@@ -15,6 +15,7 @@ def create_connection(db_file_name):
         print(e)
    
      return conn
+     
 
 def create_table(conn,sql_create_command):
     '''CREACION DE UNA TABLA A TRAVEZ DE UN COMANDO SQL
@@ -27,33 +28,54 @@ def create_table(conn,sql_create_command):
     except Error as e:
         print(e)
 
+
 def insert_cliente_data(conn, cliente):
+      '''INSERTAR DATOS DE CLIENTE A TRAVEZ DE UN COMANDO SQL
+      :param conn: objeto conexion
+      :param:cliente: datos del cliente a insertar
+      '''
       try:
         c = conn.cursor()
         sql_insert_command = """INSERT INTO clientes(first_name,last_name,phone_number,email)
                             VALUES (?,?,?,?);"""
         c.execute(sql_insert_command,cliente)
-        return c.lastrowid
+        conn.commit()
+        print(c.lastrowid,cliente[0],cliente[1])
+
       except Error as e:
         print(e)
         print(e.args)
+
+
 def insert_vendedor_data(conn, vendedor):
+      '''INSERTAR DATOS DE VENDEDOR A TRAVEZ DE UN COMANDO SQL
+      :param conn: objeto conexion
+      :param:cliente: datos del vendedor a insertar
+      '''
       try:
         c = conn.cursor()
         sql_insert_command = """INSERT INTO vendedores( first_name,last_name,departamento,email)
-                        VALUES (?,?,?,?,?);"""
+                        VALUES (?,?,?,?);"""
         c.execute(sql_insert_command,vendedor)
-        return c.lastrowid
+        conn.commit()
+        print(c.lastrowid,vendedor[0],vendedor[1])
       except Error as e:
         print(e)
-        print(e.args)        
+        print(e.args)       
+
+
 def insert_venta_data(conn, venta):
+      '''INSERTAR DATOS DE VENTAS A TRAVEZ DE UN COMANDO SQL
+      :param conn: objeto conexion
+      :param:cliente: datos de la venta a insertar
+      '''
       try:
         c = conn.cursor()
         sql_insert_command = """INSERT INTO ventas(venta_date,venta_total,vendedor_id,cliente_id)
                         VALUES (?,?,?,?);"""
         c.execute(sql_insert_command,venta)
-        return c.lastrowid
+        conn.commit()
+        print(c.lastrowid,venta[0],venta[1])
       except Error as e:
         print(e)
         print(e.args) 
@@ -92,21 +114,25 @@ def main():
     create_table(conn,sql_create_vendedores_cmd)
     create_table(conn,sql_create_ventas)
 
+    print('******TABLAS CREADAS**********')
     print('******POR FAVOR ESPERE**********')
     print('GENERANDO LA DATA')
-
+    
     cliente1 = ('OSCAR','ACOSTA',8096555555,'')
     cliente2 =('JHON','DOE','8096555556','')
     cliente3 = ('JANE','DOE','8096555557','janed@gmail.com')
     cliente4 =('FULANITO','DE TAL','8096555558','elfula@hotmail.com')
-    cliente5 = ('PERENSEJO','PEREZ','8096555559','')     
+    cliente5 = ('PERENSEJO','PEREZ','8096555559','')  
+ 
     ''''DATA DE LOS VENDEDORES '''''
     vendedor1 = ('JUAN','DE LOS PALOTES','VENTAS EMPRESARIALES','juandlp@empresa.com')
     vendedor2 = ('MICHAEL','DOEL','VENTAS DE CONTADO','michaeld@empresa.com')
-    vendedor3 =  ('JUANA','DOEL','VENTAS DE CONTADO','juanad@empresa.com'),
-    vendedor4 =  ('JOSE','DE LOS MOROS','VENTAS ELECTRONICOS','josedm@empresa.com'),
+    vendedor3 =  ('JUANA','DOEL','VENTAS DE CONTADO','juanad@empresa.com')
+    vendedor4 =  ('JOSE','DE LOS MOROS','VENTAS ELECTRONICOS','josedm@empresa.com')
     vendedor5 =  ('PETER','DE LA NUEZ','VENTAS SOFTWARE','peterdn@empresa.com')                                 
     
+    
+    ''' DATA DE VENTAS '''
     venta1 = ('2020-07-06',105.00,1,1)
     venta2 = ('2020-07-06',200.00,1,2)
     venta3 = ('2020-07-06',500.00,2,3)   
@@ -114,23 +140,32 @@ def main():
     venta5 = ('2020-07-06',30.00,4,3)         
 
     '''''INSERTANDO DATA'''''
+
+    print('\n******GENERANDO DATA DE CLIENTES*******')
     insert_cliente_data(conn,cliente1)
     insert_cliente_data(conn,cliente2)
     insert_cliente_data(conn,cliente3)
     insert_cliente_data(conn,cliente4)
     insert_cliente_data(conn,cliente5)
 
+    
+    print('\n******GENERANDO DATA DE VENDEDORES*******')  
     insert_vendedor_data(conn,vendedor1)
     insert_vendedor_data(conn,vendedor2)
     insert_vendedor_data(conn,vendedor3)
     insert_vendedor_data(conn,vendedor4)
     insert_vendedor_data(conn,vendedor5)
 
-    insert_venta_data(venta1)
-    insert_venta_data(venta2)
-    insert_venta_data(venta3)
-    insert_venta_data(venta4)
-    insert_venta_data(venta5)
+    print('\n******GENERANDO DATA DE VENTAS*******')
+    insert_venta_data(conn,venta1)
+    insert_venta_data(conn,venta2)
+    insert_venta_data(conn,venta3)
+    insert_venta_data(conn,venta4)
+    insert_venta_data(conn,venta5)
+    
+    print("*****la data de testeo se ha generado*********")
+
+
 
 if __name__  == "__main__":
     main()
